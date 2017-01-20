@@ -136,8 +136,8 @@ function addDataField(){
     var labelLang='<label for="nameLang-'+nameDivDataInput+'">Introduce el nombre del lenguaje: </label>';
     var inputLang='<input type="text" name="nameLang-'+nameDivDataInput+'" id ="nameLang-'+nameDivDataInput+'" style="width:100px;margin-right:10px" value="">';
     var labelNumber='<br><label for="numberSong-'+nameDivDataInput+'">Introduce el número de canciones: </label>';
-    var inputNumber='<input type="number" name="numberSong-'+nameDivDataInput+'" id ="numberSong-'+nameDivDataInput+'" style="width:50px;margin-right:10px" min=0>';
-    var buttonDelete='<button onclick="deleteDataField('+nameDivDataInput+');" id="buttonDelete-'+nameDivDataInput+'" value="">borra este elemento</button>';
+    var inputNumber='<input type="number" name="numberSong-'+nameDivDataInput+'" id ="numberSong-'+nameDivDataInput+'" style="width:100px;margin-right:10px" min=0 value=0>';
+    var buttonDelete='<br><button onclick="deleteDataField('+nameDivDataInput+');" id="buttonDelete-'+nameDivDataInput+'" value="">borra estos datos</button>';
     var finisDiv='</p>';
     $('#divDataInput').append( initDiv+labelLang+inputLang+labelNumber+inputNumber+buttonDelete+finisDiv);
     $('#divButtonCalcDLEM').show();
