@@ -56,11 +56,15 @@
     <div id="divIntroInput" name="divIntroInput">
         <p>DLEM es un parámetro que te informa de la diversidad lingüistica de la lista de tus canciones. Su valor está entre 0, cuando no hay nada de diversidad lingüistica en tus canciones como por ejemplo si las tienes todas en español; hasta el valor de 100 donde tienes el mismo número de canciones en diferentes idiomas.  Inspirado en un tweet de @nimbusaeta</p>
         <p>Con el siguiente botón podrás añadir  cuantas canciones tienes en un determinado lenguaje en tus listas de reproducción</p>
-        <p><button onclick="addDataField();" value="">Añadir nuevo lenguaje</button></p>
+        
     </div>
     <div id="divDataInput" name="divDataInput">
     </div>
+    <div id="divButtonAddLang" name="divButtonAddLang">
+        <p><button onclick="addDataField();" value="">Añadir nuevo lenguaje</button></p>
+    </div>
     <div id="divButtonCalcDLEM" name="divButtonCalcDLEM">
+        
         <p><button onclick="calcDLEM();" value="">Calcular</button></p>
     </div>
     <div id="divResultadosDLEM" name="divResultadosDLEM">
@@ -140,7 +144,7 @@ function addDataField(){
     var inputLang='<input type="text" name="nameLang-'+nameDivDataInput+'" id ="nameLang-'+nameDivDataInput+'" style="width:100px;margin-left:30px" value="">';
     var labelNumber='<br><label for="numberSong-'+nameDivDataInput+'">Introduce el número de canciones: </label>';
     var inputNumber='<input type="number" name="numberSong-'+nameDivDataInput+'" id ="numberSong-'+nameDivDataInput+'" style="width:100px;margin-left:23px" min=0 value=0>';
-    var buttonDelete='<br><button onclick="deleteDataField('+nameDivDataInput+');" id="buttonDelete-'+nameDivDataInput+'" value="">borra estos datos</button><p><button onclick="addDataField();" value="">Añadir nuevo lenguaje</button></p>';
+    var buttonDelete='<br><button onclick="deleteDataField('+nameDivDataInput+');" id="buttonDelete-'+nameDivDataInput+'" value="">borra estos datos</button>';
     var finisDiv='</p>';
     $('#divDataInput').append( initDiv+labelLang+inputLang+labelNumber+inputNumber+buttonDelete+finisDiv);
     $('#divButtonCalcDLEM').show();
