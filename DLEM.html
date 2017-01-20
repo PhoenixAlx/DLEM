@@ -116,6 +116,8 @@ window.onload=init();
 function init(){
     $('#divResultadosExplicacionDLEM').hide();
     $('#divButtonCalcDLEM').hide();
+    $('#divErrorExplicacionDLEM').hide();
+    
 }
 function addDataField(){
     
@@ -168,9 +170,12 @@ function calcDLEM(){
         var nameLang='#nameLang-'+nameDivDataInputArray+'';
         var valueNameLang =$( nameLang ).val();
         if (arrayLangs.indexOf(valueNameLang)>-1){
+            $('#divErrorExplicacionDLEM').show();
             document.getElementById('divErrorExplicacionDLEM').innerHTML='<p style="background-color: rgb(255,0,255);">ALERTA OJOCUIDAO!!!. El lenguaje '+valueNameLang+' está duplicado.</p>';
+            $('#divResultadosExplicacionDLEM').hide();
             return;
         }else{
+            $('#divErrorExplicacionDLEM').hide();
             arrayLangs.push(valueNameLang);
         }
         
