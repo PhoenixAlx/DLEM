@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+   dlem.html
+   
+   Copyright 2017 álex bueno <francisco.manuel.alexander@gmail.com>
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+   
+   
+-->
+
+<head>
+<meta charset="utf-8" />
+<title>DLEM</title>
+<script src="jquery-3.1.1.min.js"></script>
+<script src="progressbar.min.js"></script>
+</head>
+<body>
+<div id="divInput" name="divInput">
+    <div id="divIntroInput" name="divIntroInput">
+        <p>DLEM es un parámetro que te informa de la diversidad lingüistica de la lista de tus canciones. Su valor está entre 0, cuando no hay nada de diversidad lingüistica en tus canciones como por ejemplo si las tienes todas en español; hasta el valor de 100 donde tienes el mismo número de canciones en diferentes idiomas.  Inspirado en un tweet de @nimbusaeta</p>
+        <p>Con el siguiente botón podrás añadir  cuantas canciones tienes en un determinado lenguaje en tus listas de reproducción</p>
+        <p><button onclick="addDataField();" value="">Añadir nuevos datos</button></p>
+    </div>
+    <div id="divDataInput" name="divDataInput">
+    </div>
+    <div id="divButtonCalcDLEM" name="divButtonCalcDLEM">
+        <p><button onclick="calcDLEM();" value="">Calcular</button></p>
+    </div>
+    <div id="divResultadosDLEM" name="divResultadosDLEM">
+    </div>
+    <div id="divResultadosExplicacionDLEM" name="divResultadosExplicacionDLEM" style="width:200px;margin-left:20%">
+        <h1 style="text-align:center">DLEM</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100">
+                  <path fill-opacity="0" stroke-width="1" stroke="#bbb" d="M81.495,13.923c-11.368-5.261-26.234-0.311-31.489,11.032C44.74,13.612,29.879,8.657,18.511,13.923  C6.402,19.539,0.613,33.883,10.175,50.804c6.792,12.04,18.826,21.111,39.831,37.379c20.993-16.268,33.033-25.344,39.819-37.379  C99.387,33.883,93.598,19.539,81.495,13.923z"/>
+                  <path id="heart-path" fill-opacity="0" stroke-width="3" stroke="#ED6A5A" d="M81.495,13.923c-11.368-5.261-26.234-0.311-31.489,11.032C44.74,13.612,29.879,8.657,18.511,13.923  C6.402,19.539,0.613,33.883,10.175,50.804c6.792,12.04,18.826,21.111,39.831,37.379c20.993-16.268,33.033-25.344,39.819-37.379  C99.387,33.883,93.598,19.539,81.495,13.923z"/>
+        </svg>
+        <h1 id="resultadoDLEM" name="resultadoDLEM" style="text-align:center"></h1>
+        
+    </div>
+    <div id="divErrorExplicacionDLEM" name="divErrorExplicacionDLEM">
+    </div>
+</div>
+
+</body>
+<script>
+var arrayDataInputs = new Array();
+var nameDivDataInput=0;
+window.onload=init();
+function init(){
+    $('#divResultadosExplicacionDLEM').hide();
+    $('#divButtonCalcDLEM').hide();
+}
+function addDataField(){
+    
+    var lenArrayDataInputs = arrayDataInputs.length;
+    if (lenArrayDataInputs>0){
+        if (arrayDataInputs.indexOf(nameDivDataInput)>-1){
+            nameDivDataInput=arrayDataInputs.max()+1;
+             
+            arrayDataInputs.push(nameDivDataInput);
+        }else{
+             
+             arrayDataInputs.push(nameDivDataInput);
+        }
+    }else{
+        arrayDataInputs.push(nameDivDataInput);
+    }
+    var initDiv='<p id="dataInput-'+nameDivDataInput+'">';
+    var labelLang='<label for="nameLang-'+nameDivDataInput+'">Introduce el nombre del lenguaje: </label>';
+    var inputLang='<input type="text" name="nameLang-'+nameDivDataInput+'" id ="nameLang-'+nameDivDataInput+'" style="width:100px;margin-right:10px" value="">';
+    var labelNumber='<label for="numberSong-'+nameDivDataInput+'">Introduce el número de canciones: </label>';
+    var inputNumber='<input type="number" name="numberSong-'+nameDivDataInput+'" id ="numberSong-'+nameDivDataInput+'" style="width:50px;margin-right:10px" min=0>';
+    var buttonDelete='<button onclick="deleteDataField('+nameDivDataInput+');" id="buttonDelete-'+nameDivDataInput+'" value="">borra este elemento</button>';
+    var finisDiv='</p>';
+    $('#divDataInput').append( initDiv+labelLang+inputLang+labelNumber+inputNumber+buttonDelete+finisDiv);
+    $('#divButtonCalcDLEM').show();
+}
+function deleteDataField(nameField){
+    var nameDiv='#dataInput-'+nameField+'';
+    $( nameDiv ).remove();
+    var index = arrayDataInputs.indexOf(nameField);
+    if (index > -1) {
+        arrayDataInputs.splice(index, 1);
+    }
+    var lenArrayDataInputs = arrayDataInputs.length;
+    if (lenArrayDataInputs==0){
+        $('#divButtonCalcDLEM').hide();
+    }
+ 
+
+   
+}
+function calcDLEM(){
+    var lenArrayDataInputs = arrayDataInputs.length;
+    $('#divResultadosExplicacionDLEM').show();
+    //check duplicated languages
+    var arrayLangs=new Array();
+    for (var i=0;i<lenArrayDataInputs;i++){
+        nameDivDataInputArray=arrayDataInputs[i];
+        var nameLang='#nameLang-'+nameDivDataInputArray+'';
+        var valueNameLang =$( nameLang ).val();
+        if (arrayLangs.indexOf(valueNameLang)>-1){
+            document.getElementById('divErrorExplicacionDLEM').innerHTML='<p style="background-color: rgb(255,0,255);">ALERTA OJOCUIDAO!!!. El lenguaje '+valueNameLang+' está duplicado.</p>';
+            return;
+        }else{
+            arrayLangs.push(valueNameLang);
+        }
+        
+    }
+    //sum all numberSong
+    
+    var TotalNumberSong=0;
+    for (var i=0;i<lenArrayDataInputs;i++){
+        nameDivDataInputArray=arrayDataInputs[i];
+        var nameNumberSong='#numberSong-'+nameDivDataInputArray+'';
+        var valueNumberSong =parseInt($( nameNumberSong ).val());
+        TotalNumberSong=TotalNumberSong+valueNumberSong;
+    }
+    
+    //calc dlem
+    var dlem =0;
+    for (var i=0;i<lenArrayDataInputs;i++){
+        nameDivDataInputArray=arrayDataInputs[i];
+        var nameNumberSong='#numberSong-'+nameDivDataInputArray+'';
+        var valueNumberSong =parseInt($( nameNumberSong ).val());
+        var hNumberSong=0;
+        if (valueNumberSong>0){
+            hNumberSong=-valueNumberSong*Math.log(valueNumberSong/TotalNumberSong)/TotalNumberSong;
+        }
+
+        dlem=dlem+hNumberSong;
+
+    }
+
+    if (lenArrayDataInputs>0 && dlem>0){
+        dlem=dlem/Math.log(lenArrayDataInputs);
+    }else{
+        dlem=0;
+    }
+
+    var bar = new ProgressBar.Path('#heart-path', {
+       easing: 'easeInOut',
+        duration: 5000
+    });
+    //bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+    //bar.text.style.fontSize = '2rem';
+    bar.set(0);
+    bar.animate(dlem );  // Number from 0.0 to 1.0
+    document.getElementById('resultadoDLEM').innerHTML=Math.round(dlem*100);
+}
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
+</script>
+</html>
+ 
